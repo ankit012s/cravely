@@ -9,20 +9,24 @@ import java.util.*;
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
     public record MenuItemResponse(Long id, String name, String description,
-                                   double price, String imageUrl, boolean available) {}
+            double price, String imageUrl, boolean available) {
+    }
 
     private final RestaurantRepository restaurants;
     private final MenuItemRepository menu;
 
     public RestaurantController(RestaurantRepository restaurants, MenuItemRepository menu) {
-        this.restaurants=restaurants; this.menu=menu;
+        this.restaurants = restaurants;
+        this.menu = menu;
     }
 
     @GetMapping
-    public List<Restaurant> all(){ return restaurants.findByActiveTrue(); }
+    public List<Restaurant> all() {
+        return restaurants.findByActiveTrue();
+    }
 
     @GetMapping("/{id}/menu")
-    public List<MenuItemResponse> menu(@PathVariable Long id){
+    public List<MenuItemResponse> menu(@PathVariable Long id) {
         return menu.findByRestaurantIdAndAvailableTrue(id).stream()
                 .map(item -> new MenuItemResponse(item.getId(), item.getName(),
                         item.getDescription(), item.getPrice(), item.getImageUrl(), item.isAvailable()))
